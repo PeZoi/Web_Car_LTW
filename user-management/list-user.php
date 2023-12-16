@@ -7,8 +7,8 @@ if ((!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin')) {
 
 include_once "../database/db_connect.php";
 $db = new DB_Connect();
-# Lấy tất cả dữ liệu car lên
-$datas = $db->get("SELECT * FROM car");
+# Lấy tất cả dữ liệu user lên
+$datas = $db->get("SELECT * FROM user");
 
 ?>
 
@@ -16,7 +16,7 @@ $datas = $db->get("SELECT * FROM car");
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 
 <div class="container">
-   <h1 class="text-center mt-3">Danh sách xe</h1>
+   <h1 class="text-center mt-3">Danh sách khách hàng</h1>
    <a href="../index.php" class="d-inline-flex align-items-center justify-content-center text-decoration-none">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left"
          viewBox="0 0 16 16">
@@ -27,27 +27,27 @@ $datas = $db->get("SELECT * FROM car");
    </a>
    <hr>
    <div class="d-flex align-items-center">
-      <a href="./list-car.php" class="btn btn-primary me-3">Quản lý xe</a>
-      <a href="../user-management/list-user.php" class="btn btn-secondary">Quản lý khách hàng</a>
+      <a href="../car-management/list-car.php" class="btn btn-secondary me-3">Quản lý xe</a>
+      <a href="./list-user.php" class="btn btn-primary">Quản lý khách hàng</a>
    </div>
-   <a href="./form-car.php" class="btn btn-success my-3 d-inline-flex align-items-center justify-content-center">
+   <a href="./form-user.php" class="btn btn-success my-3 d-inline-flex align-items-center justify-content-center">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
          viewBox="0 0 16 16">
          <path fill-rule="evenodd"
             d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
       </svg>
-      <span class="ms-2">Thêm xe</span></a>
+      <span class="ms-2">Thêm khách hàng</span>
+   </a>
    <table id="table1" class="table table-striped table-hover">
       <thead>
          <tr>
             <th>ID</th>
-            <th>ẢNH</th>
-            <th>TÊN XE</th>
-            <th>THƯƠNG HIỆU</th>
-            <th>MÀU</th>
-            <th>GIÁ</th>
-            <th>NĂM SX</th>
-            <th>MÔ TẢ</th>
+            <th>TÊN TÀI KHOẢN</th>
+            <th>HỌ VÀ TÊN</th>
+            <th>ĐỊA CHỈ</th>
+            <th>EMAIL</th>
+            <th>NGÀY SINH</th>
+            <th>QUYỀN</th>
             <th>HÀNH ĐỘNG</th>
          </tr>
       </thead>
@@ -56,17 +56,17 @@ $datas = $db->get("SELECT * FROM car");
          <?php foreach ($datas as $data) : ?>
          <tr>
             <td><?= $data['id'] ?></td>
-            <td><img src="../uploads/<?= $data['thumbnail'] ?>" alt="" width="50" height="50"
-                  style="object-fit: cover;"></td>
-            <td><?= $data['name'] ?></td>
-            <td><?= $data['brand'] ?></td>
-            <td><?= $data['color'] ?></td>
-            <td><?= number_format($data['price'], 0, '', ',') ?></td>
-            <td><?= $data['yearOfProduction'] ?></td>
-            <td><?= $data['description'] ?></td>
+            <td><?= $data['username'] ?></td>
+            <td><?= $data['fullName'] ?></td>
+            <td><?= $data['address'] ?></td>
+            <td><?= $data['email'] ?></td>
+            <td><?= $data['birthDay'] ?></td>
+            <td><span
+                  class="badge bg-<?= $data['role'] === 'customer' ? 'success' : 'danger' ?>"><?= $data['role'] ?></span>
+            </td>
             <td>
                <div class="d-flex align-items-center justify-content-center">
-                  <a href="./form-car.php?id=<?= $data['id'] ?>" class="btn btn-primary me-3">
+                  <a href="./form-user.php?id=<?= $data['id'] ?>" class="btn btn-primary me-3">
                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pen" viewBox="0 0 16 16">
                         <path
@@ -99,8 +99,8 @@ $(document).ready(function() {
 });
 
 function handleDeleteConfirm(id) {
-   const href = "./handle-delete-car.php?id=" + id;
-   const isDeleted = confirm(`Bạn có muốn xoá xe có id là ${id} không?`);
+   const href = "./handle-delete-user.php?id=" + id;
+   const isDeleted = confirm(`Bạn có muốn xoá khách hàng có id là ${id} không?`);
    if (isDeleted) {
       window.location.href = href;
    }
